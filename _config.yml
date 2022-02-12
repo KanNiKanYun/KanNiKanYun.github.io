@@ -106,5 +106,16 @@ theme: butterfly
 deploy:
   type: git
   #repo: ssh://github.com/KanNiKanYun/KanNiKanYun.github.io.git
-  repo: https://github.com/KanNiKanYun/KanNiKanYun.github.io
+  repo: https://github.com/KanNiKanYun/KanNiKanYun.github.io.git
   branch: master
+
+
+
+
+#deploy:
+
+#type: git
+
+#repo: https://github.com/yourname/yourname.github.io.git -> git@github.com:a956551943/weixiaohui.github.io.git
+
+#branch: master
