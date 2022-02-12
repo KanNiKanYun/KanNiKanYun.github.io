@@ -114,8 +114,8 @@ deploy:
 
 #deploy:
 
-#type: git
+ # type: git
 
-#repo: https://github.com/yourname/yourname.github.io.git -> git@github.com:a956551943/weixiaohui.github.io.git
+  #repo: https://github.com/KanNiKanYun/KanNiKanYun.github.io.git -> git@github.com:KanNiKanYun/KanNiKanYun.github.io.git
 
-#branch: master
+  #branch: master
