@@ -1,0 +1,23 @@
+- class_name: 友情链接
+  class_desc: 那些人，那些事
+  link_list:
+    - name: 小黑
+      link: https://kannikanyun.github.io/
+      avatar: https://sm.ms/image/UxIMmD1VZcaXvFY
+      descr: 快速、简单且强大的网誌框架
+
+- class_name: 网站
+  class_desc: 值得推荐的网站
+  link_list:
+    - name: Youtube
+      link: https://www.youtube.com/
+      avatar: https://c-ssl.duitang.com/uploads/item/201512/19/20151219204012_MCArt.jpeg
+      descr: 视频网站
+    - name: Weibo
+      link: https://www.weibo.com/
+      avatar: https://i.loli.net/2020/05/14/TLJBum386vcnI1P.png
+      descr: 中国最大社交分享平臺
+    - name: Twitter
+      link: https://twitter.com/
+      avatar: https://i.loli.net/2020/05/14/5VyHPQqR6LWF39a.png
+      descr: 社交分享平臺
